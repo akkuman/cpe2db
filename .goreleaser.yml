@@ -76,20 +76,6 @@ builds:
     ldflags:
       - -s -w
 
-  - id: cpe2db-windows-386
-    binary: cpe2db
-    goarch:
-      - 386
-    goos:
-      - windows
-    env:
-      - CC=/llvm-mingw/bin/i686-w64-mingw32-gcc
-      - CXX=/llvm-mingw/bin/i686-w64-mingw32-g++
-    flags:
-      - -trimpath
-    ldflags:
-      - -s -w
-
   - id: cpe2db-windows-arm64
     binary: cpe2db
     goarch:
