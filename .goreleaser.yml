@@ -62,20 +62,6 @@ builds:
     ldflags:
       - -s -w
 
-  - id: cpe2db-windows-amd64
-    binary: cpe2db
-    goarch:
-      - amd64
-    goos:
-      - windows
-    env:
-      - CC=x86_64-w64-mingw32-gcc
-      - CXX=x86_64-w64-mingw32-g++
-    flags:
-      - -trimpath
-    ldflags:
-      - -s -w
-
 archives:
   - id: release/version
     builds:
@@ -83,7 +69,6 @@ archives:
       - cpe2db-darwin-arm64
       - cpe2db-linux-amd64
       - cpe2db-linux-arm64
-      - cpe2db-windows-amd64
     name_template: '{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}{{ .Arm }}'
     wrap_in_directory: false
     format: tar.gz
