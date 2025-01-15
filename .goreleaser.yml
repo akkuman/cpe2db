@@ -1,18 +1,136 @@
-version: 2
-
+release:
+  github:
+    owner: akkuman
+    name: cpe2db
+  name_template: 'Release {{ .Tag }}'
+env:
+  - CGO_ENABLED=1
 builds:
-  - id: cpe2db
+  - id: cpe2db-darwin-amd64
     binary: cpe2db
-    env:
-      - CGO_ENABLED=1
-    goos:
-      - linux
-      - windows
-      - darwin
     goarch:
       - amd64
-      - arm64
-    ldflags:
-      - -s -w
+    goos:
+      - darwin
+    env:
+      - CC=o64-clang
+      - CXX=o64-clang++
     flags:
       - -trimpath
+    ldflags:
+      - -s -w
+
+  - id: cpe2db-darwin-arm64
+    binary: cpe2db
+    goarch:
+      - arm64
+    goos:
+      - darwin
+    env:
+      - CC=oa64-clang
+      - CXX=oa64-clang++
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+  - id: cpe2db-linux-amd64
+    binary: cpe2db
+    goarch:
+      - amd64
+    goos:
+      - linux
+    env:
+      - CC=x86_64-linux-gnu-gcc
+      - CXX=x86_64-linux-gnu-g++
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+  - id: cpe2db-linux-arm64
+    binary: cpe2db
+    goarch:
+      - arm64
+    goos:
+      - linux
+    env:
+      - CC=aarch64-linux-gnu-gcc
+      - CXX=aarch64-linux-gnu-g++
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+  - id: cpe2db-windows-amd64
+    binary: cpe2db
+    goarch:
+      - amd64
+    goos:
+      - windows
+    env:
+      - CC=x86_64-w64-mingw32-gcc
+      - CXX=x86_64-w64-mingw32-g++
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+  - id: cpe2db-windows-386
+    binary: cpe2db
+    goarch:
+      - 386
+    goos:
+      - windows
+    env:
+      - CC=/llvm-mingw/bin/i686-w64-mingw32-gcc
+      - CXX=/llvm-mingw/bin/i686-w64-mingw32-g++
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+  - id: cpe2db-windows-arm64
+    binary: cpe2db
+    goarch:
+      - arm64
+    goos:
+      - windows
+    env:
+      - CC=/llvm-mingw/bin/aarch64-w64-mingw32-gcc
+      - CXX=/llvm-mingw/bin/aarch64-w64-mingw32-g++
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+
+archives:
+  - id: release/version
+    builds:
+      - cpe2db-darwin-amd64
+      - cpe2db-darwin-arm64
+      - cpe2db-linux-amd64
+      - cpe2db-linux-arm64
+      - cpe2db-windows-amd64
+      - cpe2db-windows-386
+      - cpe2db-windows-arm64
+    name_template: '{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}{{ .Arm }}'
+    wrap_in_directory: false
+    format: tar.gz
+    format_overrides:
+    - goos: windows
+      format: zip
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^test:'

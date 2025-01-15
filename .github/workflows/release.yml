@@ -18,21 +18,21 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       -
-        name: Set up Go
-        uses: actions/setup-go@v5
+        name: Fetch tags
+        run: git fetch --prune --unshallow --tags -f
       -
-        name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          # either 'goreleaser' (default) or 'goreleaser-pro'
-          distribution: goreleaser
-          # 'latest', 'nightly', or a semver
-          version: '~> v2'
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Your GoReleaser Pro key, if you are using the 'goreleaser-pro' distribution
-          # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
+        name: Setup release environment
+        run: |-
+          echo 'GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}' > .release-env
+      -
+        name: GoReleaser publish
+        run: |-
+          docker run \
+            --rm \
+            -e CGO_ENABLED=1 \
+            --env-file .release-env \
+            -v `pwd`:/cpe2db \
+            -w /cpe2db \
+            ghcr.io/goreleaser/goreleaser-cross:v1.23 \
+            release --clean
